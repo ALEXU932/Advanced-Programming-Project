@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Run Electric Billing System",
+            "request": "launch",
+            "mainClass": "Main",
+            "classPaths": [
+                "${workspaceFolder}/out",
+                "${workspaceFolder}/lib/commons-collections4-4.4.jar",
+                "${workspaceFolder}/lib/commons-compress-1.24.0.jar",
+                "${workspaceFolder}/lib/commons-io-2.15.1.jar",
+                "${workspaceFolder}/lib/itextpdf-5.5.13.3.jar",
+                "${workspaceFolder}/lib/javax.mail-1.6.2.jar",
+                "${workspaceFolder}/lib/log4j-api-2.21.1.jar",
+                "${workspaceFolder}/lib/mysql-connector-j-8.0.33.jar",
+                "${workspaceFolder}/lib/poi-5.2.5.jar",
+                "${workspaceFolder}/lib/poi-ooxml-5.2.5.jar",
+                "${workspaceFolder}/lib/xmlbeans-5.1.1.jar"
+            ],
+            "vmArgs": "-Dlog4j2.loggerContextFactory=org.apache.logging.log4j.simple.SimpleLoggerContextFactory"
+        }
+    ]
+}
