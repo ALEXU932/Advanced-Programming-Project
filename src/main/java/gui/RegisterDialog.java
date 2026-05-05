@@ -1,7 +1,7 @@
 package gui;
 
 import database.DatabaseManager;
-import logic.PasswordUtils;
+import Logic.PasswordUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -199,7 +199,7 @@ public class RegisterDialog extends JDialog {
             statusLabel.setText("Passwords do not match.");
             return;
         }
-        String passErr = logic.SystemSettings.validatePassword(pass);
+        String passErr = Logic.SystemSettings.validatePassword(pass);
         if (passErr != null) { statusLabel.setText(passErr); return; }
 
         try (Connection conn = DatabaseManager.getInstance().getConnection()) {
