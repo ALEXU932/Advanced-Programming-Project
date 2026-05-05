@@ -1,6 +1,6 @@
 import database.DatabaseManager;
 import gui.LoginFrame;
-import logic.SystemSettings;
+import Logic.SystemSettings;
 
 import javax.swing.*;
 
