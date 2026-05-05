@@ -1,4 +1,4 @@
-package logic;
+package Logic;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

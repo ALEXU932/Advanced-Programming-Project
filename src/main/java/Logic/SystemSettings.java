@@ -1,4 +1,4 @@
-package logic;
+package Logic;
 
 import database.DatabaseManager;
 import java.sql.*;
