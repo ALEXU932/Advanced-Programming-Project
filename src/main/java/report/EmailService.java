@@ -1,4 +1,4 @@
-package report_validation;
+package report;
 
 import database.DatabaseManager;
 
