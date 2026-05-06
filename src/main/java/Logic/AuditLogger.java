@@ -1,5 +1,4 @@
 package Logic;
-
 import database.DatabaseManager;
 import java.sql.*;
 import java.util.logging.Logger;
