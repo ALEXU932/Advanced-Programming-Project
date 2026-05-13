@@ -3,7 +3,7 @@ package gui;
 import database.DatabaseManager;
 import database.Customer;
 import database.User;
-import logic.PasswordUtils;
+import Logic.PasswordUtils;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -83,7 +83,7 @@ public class CustomerManagementPanel extends JPanel {
         refreshBtn.addActionListener(e -> loadData());
         searchBtn.addActionListener(e -> loadData(searchField.getText().trim()));
         searchField.addActionListener(e -> loadData(searchField.getText().trim()));
-        exportBtn.addActionListener(e -> report_validation.ExcelExporter.export(this, table, "Customers"));
+        exportBtn.addActionListener(e -> report.ExcelExporter.export(this, table, "Customers"));
     }
 
     private void loadData() { loadData(""); }
@@ -178,9 +178,9 @@ public class CustomerManagementPanel extends JPanel {
             loadData();
             JOptionPane.showMessageDialog(this, "Customer deleted successfully.", "Deleted", JOptionPane.INFORMATION_MESSAGE);
             // Audit log
-            User u = logic.SessionManager.getCurrentUser();
-            if (u != null) logic.AuditLogger.log(u.getUserId(), u.getUsername(),
-                logic.AuditLogger.Action.DELETE_CUSTOMER,
+            User u = Logic.SessionManager.getCurrentUser();
+            if (u != null) Logic.AuditLogger.log(u.getUserId(), u.getUsername(),
+                Logic.AuditLogger.Action.DELETE_CUSTOMER,
                 "Deleted customer: " + name + " (ID=" + id + ")");
         } catch (SQLException e) {
             error("Error deleting customer: " + e.getMessage());
@@ -367,7 +367,7 @@ public class CustomerManagementPanel extends JPanel {
         // Upload listener
         uploadBtn.addActionListener(e -> {
             int tempId = isEdit ? existing.getUserId() : -1;
-            String p = logic.ProfilePicUtils.chooseAndSave(dialog, tempId);
+            String p = Logic.ProfilePicUtils.chooseAndSave(dialog, tempId);
             if (p != null) {
                 picPath[0] = p;
                 avatarPanel.setImage(p);
@@ -410,9 +410,9 @@ public class CustomerManagementPanel extends JPanel {
                     else pp.setNull(1, Types.VARCHAR);
                     pp.setInt(2,existing.getUserId()); pp.executeUpdate();
                     // Audit log
-                    User au = logic.SessionManager.getCurrentUser();
-                    if (au != null) logic.AuditLogger.log(au.getUserId(), au.getUsername(),
-                        logic.AuditLogger.Action.EDIT_CUSTOMER,
+                    User au = Logic.SessionManager.getCurrentUser();
+                    if (au != null) Logic.AuditLogger.log(au.getUserId(), au.getUsername(),
+                        Logic.AuditLogger.Action.EDIT_CUSTOMER,
                         "Updated customer: " + name + " (ID=" + existing.getCustomerId() + ")");
                 } else {
                     String username = userF.getText().trim();
@@ -433,7 +433,7 @@ public class CustomerManagementPanel extends JPanel {
 
                     // Rename temp pic file to real uid
                     if (picPath[0] != null && uid > 0) {
-                        String newPath = logic.ProfilePicUtils.renameTempPic(-1, uid);
+                        String newPath = Logic.ProfilePicUtils.renameTempPic(-1, uid);
                         if (newPath != null) {
                             PreparedStatement pp = conn.prepareStatement(
                                 "UPDATE users SET profile_pic=? WHERE user_id=?");
@@ -456,9 +456,9 @@ public class CustomerManagementPanel extends JPanel {
                     ps3.executeUpdate();
                     conn.commit();
                     // Audit log — add customer
-                    User au = logic.SessionManager.getCurrentUser();
-                    if (au != null) logic.AuditLogger.log(au.getUserId(), au.getUsername(),
-                        logic.AuditLogger.Action.ADD_CUSTOMER,
+                    User au = Logic.SessionManager.getCurrentUser();
+                    if (au != null) Logic.AuditLogger.log(au.getUserId(), au.getUsername(),
+                        Logic.AuditLogger.Action.ADD_CUSTOMER,
                         "Added customer: " + name + ", meter: " + meter);
                 }
                 loadData(); dialog.dispose();
