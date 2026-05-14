@@ -128,9 +128,9 @@ public class TariffPanel extends JPanel {
                  "UPDATE tariffs SET is_active = NOT is_active WHERE tariff_id=?")) {
             ps.setInt(1, id);
             ps.executeUpdate();
-            User au = logic.SessionManager.getCurrentUser();
-            if (au != null) logic.AuditLogger.log(au.getUserId(), au.getUsername(),
-                logic.AuditLogger.Action.TOGGLE_TARIFF,
+            User au = Logic.SessionManager.getCurrentUser();
+            if (au != null) Logic.AuditLogger.log(au.getUserId(), au.getUsername(),
+                Logic.AuditLogger.Action.TOGGLE_TARIFF,
                 "Toggled tariff ID=" + id + " (" + tableModel.getValueAt(row, 1) + ")");
             loadData();
         } catch (SQLException e) {
@@ -235,9 +235,9 @@ public class TariffPanel extends JPanel {
                         if (!end.isEmpty()) ps.setString(5, end); else ps.setNull(5, Types.DATE);
                         ps.setInt(6, tariffId);
                         ps.executeUpdate();
-                        User au = logic.SessionManager.getCurrentUser();
-                        if (au != null) logic.AuditLogger.log(au.getUserId(), au.getUsername(),
-                            logic.AuditLogger.Action.EDIT_TARIFF,
+                        User au = Logic.SessionManager.getCurrentUser();
+                        if (au != null) Logic.AuditLogger.log(au.getUserId(), au.getUsername(),
+                            Logic.AuditLogger.Action.EDIT_TARIFF,
                             "Updated tariff: " + name + " (ID=" + tariffId + "), rate=$" + rate + "/kWh");
                     } else {
                         PreparedStatement ps = conn.prepareStatement(
@@ -248,9 +248,9 @@ public class TariffPanel extends JPanel {
                         ps.setString(4, start);
                         if (!end.isEmpty()) ps.setString(5, end); else ps.setNull(5, Types.DATE);
                         ps.executeUpdate();
-                        User au = logic.SessionManager.getCurrentUser();
-                        if (au != null) logic.AuditLogger.log(au.getUserId(), au.getUsername(),
-                            logic.AuditLogger.Action.ADD_TARIFF,
+                        User au = Logic.SessionManager.getCurrentUser();
+                        if (au != null) Logic.AuditLogger.log(au.getUserId(), au.getUsername(),
+                            Logic.AuditLogger.Action.ADD_TARIFF,
                             "Added tariff: " + name + ", rate=$" + rate + "/kWh, fixed=$" + fixed);
                     }
                 }

@@ -209,9 +209,9 @@ public class ReportsPanel extends JPanel {
                 pw.println();
             }
             JOptionPane.showMessageDialog(this, "Report exported successfully!");
-            User au = logic.SessionManager.getCurrentUser();
-            if (au != null) logic.AuditLogger.log(au.getUserId(), au.getUsername(),
-                logic.AuditLogger.Action.EXPORT_REPORT,
+            User au = Logic.SessionManager.getCurrentUser();
+            if (au != null) Logic.AuditLogger.log(au.getUserId(), au.getUsername(),
+                Logic.AuditLogger.Action.EXPORT_REPORT,
                 "Exported report '" + reportTypeCb.getSelectedItem() + "' to CSV: " + fc.getSelectedFile().getName());
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Export error: " + e.getMessage());
