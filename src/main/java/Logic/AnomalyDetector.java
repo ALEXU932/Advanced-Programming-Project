@@ -7,7 +7,7 @@ import java.util.List;
  * Flags readings that deviate more than 2 standard deviations from the mean.
  */
 public class AnomalyDetector {
-
+    private static final double Z_THRESHOLD = 2.0;
     /**
      * Checks if a consumption value is an anomaly based on historical data.
      * Uses Z-score threshold of 2.0 standard deviations.

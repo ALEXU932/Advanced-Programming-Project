@@ -150,7 +150,7 @@ public class CustomerDashboard extends JFrame {
 
         JButton logoutBtn = UITheme.createDangerButton("Logout");
         logoutBtn.addActionListener(e -> {
-            logic.SessionManager.logout();
+            Logic.SessionManager.logout();
             dispose();
             new LoginFrame().setVisible(true);
         });

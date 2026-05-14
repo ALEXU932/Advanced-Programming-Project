@@ -3,6 +3,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import database.User;
 
 public class AdminDashboard extends JFrame {
 
@@ -113,7 +114,7 @@ public class AdminDashboard extends JFrame {
         avatar.setRingColor(UITheme.PRIMARY);
         if (currentUser.getProfilePic() != null) avatar.setImage(currentUser.getProfilePic());
         JButton logoutBtn = UITheme.createDangerButton("Logout");
-        logoutBtn.addActionListener(e -> { logic.SessionManager.logout(); dispose(); new LoginFrame().setVisible(true); });
+        logoutBtn.addActionListener(e -> { Logic.SessionManager.logout(); dispose(); new LoginFrame().setVisible(true); });
         right.add(avatar); right.add(logoutBtn);
         header.add(right, BorderLayout.EAST);
         return header;

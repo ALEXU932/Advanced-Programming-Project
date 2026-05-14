@@ -92,7 +92,7 @@ public class CsvImporter {
         dialog.setSize(700, 520);
         dialog.setLocationRelativeTo(parent);
 
-        BackgroundPanel bp = new BackgroundPanel(new BorderLayout(0, 10));
+        gui.BackgroundPanel bp = new gui.BackgroundPanel(new BorderLayout(0, 10));
         bp.setOverlayAlpha(0.72f);
         dialog.setContentPane(bp);
 
@@ -100,35 +100,35 @@ public class CsvImporter {
             @Override protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setColor(new Color(8,18,50,240)); g2.fillRect(0,0,getWidth(),getHeight());
-                g2.setColor(UITheme.PRIMARY); g2.setStroke(new java.awt.BasicStroke(2f));
+                g2.setColor(gui.UITheme.PRIMARY); g2.setStroke(new java.awt.BasicStroke(2f));
                 g2.drawLine(0,getHeight()-1,getWidth(),getHeight()-1); g2.dispose();
             }
         };
         dh.setOpaque(false); dh.setPreferredSize(new Dimension(0,52));
         dh.setBorder(BorderFactory.createEmptyBorder(0,20,0,20));
         JLabel dhTitle = new JLabel("CSV Import — Meter Readings");
-        dhTitle.setFont(new Font("Segoe UI",Font.BOLD,15)); dhTitle.setForeground(UITheme.PRIMARY);
+        dhTitle.setFont(new Font("Segoe UI",Font.BOLD,15)); dhTitle.setForeground(gui.UITheme.PRIMARY);
         JLabel dhSub = new JLabel(valid.size() + " valid  |  " + errors.size() + " errors");
-        dhSub.setFont(UITheme.FONT_SMALL);
-        dhSub.setForeground(errors.isEmpty() ? UITheme.SUCCESS : UITheme.WARNING);
+        dhSub.setFont(gui.UITheme.FONT_SMALL);
+        dhSub.setForeground(errors.isEmpty() ? gui.UITheme.SUCCESS : gui.UITheme.WARNING);
         dh.add(dhTitle, BorderLayout.WEST); dh.add(dhSub, BorderLayout.EAST);
         bp.add(dh, BorderLayout.NORTH);
 
         JTabbedPane tabs = new JTabbedPane();
         tabs.setOpaque(false);
-        tabs.setFont(UITheme.FONT_LABEL);
+        tabs.setFont(gui.UITheme.FONT_LABEL);
 
         String[] cols = {"Customer ID","Reading Date","Current Reading"};
         Object[][] validData = valid.stream()
             .map(r -> new Object[]{r[0], r[1], r[2]})
             .toArray(Object[][]::new);
         JTable validTable = new JTable(validData, cols);
-        UITheme.styleTable(validTable);
-        tabs.addTab("Valid Rows (" + valid.size() + ")", UITheme.createScrollPane(validTable));
+        gui.UITheme.styleTable(validTable);
+        tabs.addTab("Valid Rows (" + valid.size() + ")", gui.UITheme.createScrollPane(validTable));
 
         JTextArea errArea = new JTextArea(String.join("\n", errors));
-        errArea.setFont(UITheme.FONT_SMALL);
-        errArea.setForeground(UITheme.DANGER);
+        errArea.setFont(gui.UITheme.FONT_SMALL);
+        errArea.setForeground(gui.UITheme.DANGER);
         errArea.setBackground(new Color(10,25,60,200));
         errArea.setEditable(false);
         JScrollPane errScroll = new JScrollPane(errArea);
@@ -147,15 +147,15 @@ public class CsvImporter {
         footer.setOpaque(false);
 
         JLabel infoLbl = new JLabel(valid.isEmpty() ? "No valid rows to import." : "");
-        infoLbl.setFont(UITheme.FONT_SMALL); infoLbl.setForeground(UITheme.TEXT_MUTED);
+        infoLbl.setFont(gui.UITheme.FONT_SMALL); infoLbl.setForeground(gui.UITheme.TEXT_MUTED);
 
         JButton cancelBtn = new JButton("Cancel");
-        cancelBtn.setFont(UITheme.FONT_BUTTON); cancelBtn.setForeground(UITheme.TEXT_LIGHT);
+        cancelBtn.setFont(gui.UITheme.FONT_BUTTON); cancelBtn.setForeground(gui.UITheme.TEXT_LIGHT);
         cancelBtn.setBackground(new Color(40,60,100)); cancelBtn.setBorderPainted(false);
         cancelBtn.setFocusPainted(false); cancelBtn.setPreferredSize(new Dimension(100,36));
         cancelBtn.addActionListener(e -> dialog.dispose());
 
-        JButton importBtn = UITheme.createPrimaryButton("Import " + valid.size() + " Rows");
+        JButton importBtn = gui.UITheme.createPrimaryButton("Import " + valid.size() + " Rows");
         importBtn.setPreferredSize(new Dimension(160,36));
         importBtn.setEnabled(!valid.isEmpty());
 
@@ -164,7 +164,7 @@ public class CsvImporter {
 
         importBtn.addActionListener(e -> {
             int inserted = 0, failed = 0;
-            try (Connection conn = DatabaseManager.getInstance().getConnection()) {
+            try (Connection conn = database.DatabaseManager.getInstance().getConnection()) {
                 conn.setAutoCommit(false);
                 for (String[] row : valid) {
                     try {
@@ -196,7 +196,7 @@ public class CsvImporter {
     }
 
     private static boolean customerExists(int id) {
-        try (Connection conn = DatabaseManager.getInstance().getConnection();
+        try (Connection conn = database.DatabaseManager.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement("SELECT 1 FROM customers WHERE customer_id=?")) {
             ps.setInt(1, id);
             return ps.executeQuery().next();
