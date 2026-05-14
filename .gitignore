@@ -1,0 +1,49 @@
+# ── Compiled output ───────────────────────────────────────────────────────────
+out/
+target/
+
+# ── Runtime data ──────────────────────────────────────────────────────────────
+# User profile pictures (uploaded at runtime, not source code)
+resources/profiles/*.png
+resources/profiles/*.jpg
+resources/profiles/*.jpeg
+
+# ── Sensitive configuration ───────────────────────────────────────────────────
+# If you ever move DB credentials to a config file, exclude it here
+config.properties
+*.env
+
+# ── OS generated files ────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── IDE files ─────────────────────────────────────────────────────────────────
+# VS Code — keep .vscode/settings.json and launch.json (useful for teammates)
+# but ignore personal/local-only overrides
+.vscode/*.log
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# NetBeans
+nbproject/
+nb-configuration.xml
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
+*.log
+compile_out.txt
+compile_err.txt
+
+# ── Temporary files ───────────────────────────────────────────────────────────
+*.tmp
+*.bak
+*.swp

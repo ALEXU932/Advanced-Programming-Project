@@ -31,18 +31,18 @@ javac -encoding UTF-8 -cp "%CP%" -sourcepath "%SRC%" -d "%OUT%" ^
   "%SRC%\database\Payment.java" ^
   "%SRC%\database\MeterReading.java" ^
   "%SRC%\database\Bill.java" ^
-  "%SRC%\logic\PasswordUtils.java" ^
-  "%SRC%\logic\BillCalculator.java" ^
-  "%SRC%\logic\AuditLogger.java" ^
-  "%SRC%\logic\SessionManager.java" ^
-  "%SRC%\logic\SystemSettings.java" ^
-  "%SRC%\logic\ProfilePicUtils.java" ^
-  "%SRC%\logic\AnomalyDetector.java" ^
-  "%SRC%\logic\ConsumptionPredictor.java" ^
-  "%SRC%\report_validation\PDFGenerator.java" ^
-  "%SRC%\report_validation\ExcelExporter.java" ^
-  "%SRC%\report_validation\EmailService.java" ^
-  "%SRC%\report_validation\CsvImporter.java" ^
+  "%SRC%\Logic\PasswordUtils.java" ^
+  "%SRC%\Logic\BillCalculator.java" ^
+  "%SRC%\Logic\AuditLogger.java" ^
+  "%SRC%\Logic\SessionManager.java" ^
+  "%SRC%\Logic\SystemSettings.java" ^
+  "%SRC%\Logic\ProfilePicUtils.java" ^
+  "%SRC%\Logic\AnomalyDetector.java" ^
+  "%SRC%\Logic\ConsumptionPredictor.java" ^
+  "%SRC%\report\PDFGenerator.java" ^
+  "%SRC%\report\ExcelExporter.java" ^
+  "%SRC%\report\EmailService.java" ^
+  "%SRC%\report\CsvImporter.java" ^
   "%SRC%\gui\BackgroundPanel.java" ^
   "%SRC%\gui\UITheme.java" ^
   "%SRC%\gui\AvatarPanel.java" ^
