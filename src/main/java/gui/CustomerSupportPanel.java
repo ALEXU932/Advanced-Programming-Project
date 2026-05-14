@@ -3,6 +3,8 @@ package gui;
 import java.awt.*;
 import java.sql.*;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import database.DatabaseManager;
 import database.Customer;
