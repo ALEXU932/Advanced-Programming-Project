@@ -1,7 +1,7 @@
 package gui;
 
-import javax.swing.*;
 import java.awt.*;
+import javax.swing.*;
 
 public class UITheme {
     // Color palette
@@ -70,17 +70,29 @@ public class UITheme {
     }
 
     public static JButton createAccentButton(String text) {
-        JButton btn = new JButton(text);
+        final Color[] bg = {ACCENT};
+        JButton btn = new JButton(text) {
+            @Override protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(bg[0]);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
+                g2.dispose();
+                super.paintComponent(g);
+            }
+            @Override protected void paintBorder(Graphics g) { /* no border */ }
+        };
         btn.setFont(FONT_BUTTON);
-        btn.setBackground(ACCENT);
         btn.setForeground(Color.WHITE);
+        btn.setContentAreaFilled(false);
         btn.setFocusPainted(false);
         btn.setBorderPainted(false);
+        btn.setOpaque(false);
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btn.setBorder(BorderFactory.createEmptyBorder(dim(6), dim(12), dim(6), dim(12)));
+        btn.setBorder(BorderFactory.createEmptyBorder(dim(10), dim(28), dim(10), dim(28)));
         btn.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent e) { btn.setBackground(new Color(0, 140, 200)); }
-            public void mouseExited(java.awt.event.MouseEvent e)  { btn.setBackground(ACCENT); }
+            public void mouseEntered(java.awt.event.MouseEvent e) { bg[0] = new Color(0, 140, 200); btn.repaint(); }
+            public void mouseExited(java.awt.event.MouseEvent e)  { bg[0] = ACCENT;                 btn.repaint(); }
         });
         return btn;
     }
