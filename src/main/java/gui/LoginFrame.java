@@ -1,14 +1,13 @@
 package gui;
 
-import java.awt.*;
-import java.sql.*;
-import javax.swing.*;
-
-import database.DatabaseManager;
-import database.User;
 import Logic.AuditLogger;
 import Logic.PasswordUtils;
 import Logic.SessionManager;
+import database.DatabaseManager;
+import database.User;
+import java.awt.*;
+import java.sql.*;
+import javax.swing.*;
 
 /**
  * LoginFrame is the application entry point for user authentication.
@@ -165,19 +164,57 @@ public class LoginFrame extends JFrame {
         usernameField = UITheme.createTextField();
         usernameField.setPreferredSize(new Dimension(0, UITheme.dim(40)));
 
-        passwordField = UITheme.createPasswordField();
-        passwordField.setPreferredSize(new Dimension(0, UITheme.dim(40)));
-
-        // Password wrapper: lock icon | password field | eye toggle
-        JPanel passWrapper = new JPanel(new GridBagLayout()) {
+        // Username wrapper with rounded corners
+        JPanel userWrapper = new JPanel(new GridBagLayout()) {
             @Override protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(new Color(20, 40, 80, 200));
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
                 g2.setColor(UITheme.ACCENT);
                 g2.setStroke(new BasicStroke(1f));
-                g2.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, 8, 8);
+                g2.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, 20, 20);
+                g2.dispose();
+            }
+        };
+        userWrapper.setOpaque(false);
+        userWrapper.setPreferredSize(new Dimension(0, UITheme.dim(40)));
+
+        // Remove border from usernameField since wrapper handles it
+        usernameField.setBorder(BorderFactory.createEmptyBorder(0, UITheme.dim(10), 0, UITheme.dim(10)));
+        usernameField.setOpaque(false);
+
+        GridBagConstraints uw = new GridBagConstraints();
+        uw.fill = GridBagConstraints.BOTH; uw.weighty = 1;
+        uw.gridy = 0; uw.gridx = 0; uw.weightx = 1;
+        userWrapper.add(usernameField, uw);
+
+        passwordField = UITheme.createPasswordField();
+        passwordField.setPreferredSize(new Dimension(0, UITheme.dim(40)));
+
+        // Password wrapper: lock icon | password field | eye toggle
+        final boolean[] passFocused = {false};
+        JPanel passWrapper = new JPanel(new GridBagLayout()) {
+            @Override protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                if (passFocused[0]) {
+                    // Active state: lighter inner fill + brighter border
+                    g2.setColor(new Color(30, 60, 120, 220));
+                    g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
+                    // Inner glow layer
+                    g2.setColor(new Color(0, 180, 255, 30));
+                    g2.fillRoundRect(3, 3, getWidth()-6, getHeight()-6, 16, 16);
+                    g2.setColor(UITheme.ACCENT);
+                    g2.setStroke(new BasicStroke(1.8f));
+                    g2.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, 20, 20);
+                } else {
+                    g2.setColor(new Color(20, 40, 80, 200));
+                    g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
+                    g2.setColor(UITheme.ACCENT);
+                    g2.setStroke(new BasicStroke(1f));
+                    g2.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, 20, 20);
+                }
                 g2.dispose();
             }
         };
@@ -247,6 +284,18 @@ public class LoginFrame extends JFrame {
             eyeBtn.repaint();
         });
 
+        // Active/inactive state for password wrapper
+        passwordField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override public void focusGained(java.awt.event.FocusEvent e) {
+                passFocused[0] = true;
+                passWrapper.repaint();
+            }
+            @Override public void focusLost(java.awt.event.FocusEvent e) {
+                passFocused[0] = false;
+                passWrapper.repaint();
+            }
+        });
+
         GridBagConstraints pw = new GridBagConstraints();
         pw.fill = GridBagConstraints.BOTH; pw.weighty = 1;
         pw.gridy = 0;
@@ -265,15 +314,16 @@ public class LoginFrame extends JFrame {
         statusLabel.setForeground(UITheme.DANGER);
 
         // Buttons row
-        JButton loginBtn  = UITheme.createPrimaryButton("\u2192  Login");
-        JButton cancelBtn = UITheme.createDangerButton("\u2715  Cancel");
-        loginBtn.setPreferredSize(new Dimension(UITheme.dim(130), UITheme.dim(40)));
-        cancelBtn.setPreferredSize(new Dimension(UITheme.dim(110), UITheme.dim(40)));
+        JButton loginBtn  = UITheme.createAccentButton("\u2192  Login");
+        loginBtn.setPreferredSize(new Dimension(0, UITheme.dim(44)));
 
-        JPanel btnRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 0));
+        // Align button to the field column (same 32/68 split as fieldRow)
+        JPanel btnRow = new JPanel(new GridBagLayout());
         btnRow.setOpaque(false);
-        btnRow.add(loginBtn);
-        btnRow.add(cancelBtn);
+        GridBagConstraints br = new GridBagConstraints();
+        br.fill = GridBagConstraints.HORIZONTAL; br.gridy = 0;
+        br.gridx = 0; br.weightx = 0.32; btnRow.add(Box.createHorizontalGlue(), br);
+        br.gridx = 1; br.weightx = 0.68; btnRow.add(loginBtn, br);
 
         // Forgot password link
         JButton forgotBtn = new JButton("Forgot password?");
@@ -284,31 +334,31 @@ public class LoginFrame extends JFrame {
         forgotBtn.setContentAreaFilled(false);
         forgotBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
+        JPanel forgotRow = new JPanel(new GridBagLayout());
+        forgotRow.setOpaque(false);
+        GridBagConstraints fr = new GridBagConstraints();
+        fr.fill = GridBagConstraints.HORIZONTAL; fr.gridy = 0;
+        fr.gridx = 0; fr.weightx = 0.32; forgotRow.add(Box.createHorizontalGlue(), fr);
+        fr.gridx = 1; fr.weightx = 0.68; forgotRow.add(forgotBtn, fr);
+
         // Layout
         int r = 0;
         g.gridy = r++; g.insets = new Insets(0,0,2,0); panel.add(welcome, g);
         g.gridy = r++; g.insets = new Insets(0,0,18,0); panel.add(subLbl, g);
 
-        g.gridy = r++; g.insets = new Insets(4,0,2,0); panel.add(fieldRow("User Name: *", usernameField), g);
+        g.gridy = r++; g.insets = new Insets(4,0,2,0); panel.add(fieldRow("User Name: *", userWrapper), g);
         g.gridy = r++; g.insets = new Insets(4,0,2,0); panel.add(fieldRow("Password: *",  passWrapper), g);
 
         g.gridy = r++; g.insets = new Insets(4,0,2,0); panel.add(attemptsLabel, g);
         g.gridy = r++; g.insets = new Insets(0,0,10,0); panel.add(statusLabel, g);
 
         g.gridy = r++; g.insets = new Insets(4,0,8,0); panel.add(btnRow, g);
-        g.gridy = r++; g.insets = new Insets(0,0,0,0); panel.add(forgotBtn, g);
+        g.gridy = r++; g.insets = new Insets(0,0,0,0); panel.add(forgotRow, g);
 
         // Actions
         loginBtn.addActionListener(e -> doLogin());
         passwordField.addActionListener(e -> doLogin());
         usernameField.addActionListener(e -> doLogin());
-        cancelBtn.addActionListener(e -> {
-            usernameField.setText("");
-            passwordField.setText("");
-            statusLabel.setText(" ");
-            attemptsLabel.setText(" ");
-            usernameField.requestFocus();
-        });
         forgotBtn.addActionListener(e -> openForgotPassword());
 
         return panel;
